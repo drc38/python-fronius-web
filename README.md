@@ -4,7 +4,7 @@ Python client for the Fronius Solar.web API.
 
 ## Features 
 
-- Talks to your Fronius Solr.web PV system via Cloud API
+- Talks to your Fronius Solar.web PV system via Cloud API
 - Automatic retries with exponential backoff
 - Optionally pass in a `httpx` client
 
@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
 ## Examples
 
-`python-evnex` is intended as a library, but a few example scripts are provided in the `examples` folder.
+`python-fronius-solarweb` is intended as a library.
 
 Providing authentication for the examples is via environment variables, e.g. on nix systems:
 
@@ -56,7 +56,6 @@ export ACCESS_KEY_ID=FKIAFEF58CFEFA94486F9C804CF6077A01AB
 export ACCESS_KEY_VALUE=47c076bc-23e5-4949-37a6-4bcfcf8d21d6
 export PV_SYSTEM_ID=20bb600e-019b-4e03-9df3-a0a900cda689
 
-python -m examples.get_charge_point_detail
 ```
 
 
