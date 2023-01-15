@@ -4,11 +4,11 @@ version = "0.1"
 description = "A Python wrapper for the Fronius Solar.web Cloud API"
 authors = ["Derek Caudwell <derek_caudwell@hotmail.com>"]
 readme = "README.md"
-repository = "https://github.com/drc38"
+repository = "https://github.com/drc38/python-fronius-web"
 license = "MIT"
 
 [tool.poetry.urls]
-issues = "https://github.com/drc38"
+issues = "https://github.com/drc38/python-fronius-web/issues"
 
 
 [tool.poetry.dependencies]
