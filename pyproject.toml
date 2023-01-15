@@ -5,7 +5,7 @@ description = "A Python wrapper for the Fronius Solar.web Cloud API"
 authors = ["Derek Caudwell <derek_caudwell@hotmail.com>"]
 readme = "README.md"
 repository = "https://github.com/drc38"
-license = "Apache-2.0"
+license = "MIT"
 
 [tool.poetry.urls]
 issues = "https://github.com/drc38"
