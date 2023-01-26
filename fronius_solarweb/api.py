@@ -3,10 +3,15 @@ from importlib.metadata import PackageNotFoundError, version
 from typing import Optional
 
 from httpx import AsyncClient
-from pydantic import HttpUrl, ValidationError
-from tenacity import retry, retry_if_not_exception_type, wait_random_exponential
+from pydantic import ValidationError
+from tenacity import (
+    retry,
+    retry_if_not_exception_type,
+    wait_random_exponential,
+    stop_after_attempt,
+)
 
-from .errors import NotAuthorizedException
+from .errors import NotAuthorizedException, NotFoundException
 
 from .schema.pvsystem import PvSystemMetaData, PvSystemFlowData
 from .schema.device import DeviceMetaData, DevicesMetaData
@@ -14,7 +19,8 @@ from .schema.device import DeviceMetaData, DevicesMetaData
 logger = logging.getLogger("fronius_solarweb.api")
 
 
-SW_BASE_URL: HttpUrl = " https://api.solarweb.com/swqapi"
+SW_BASE_URL = "https://api.solarweb.com/swqapi"
+MAX_ATTEMPTS = 5
 
 
 class Fronius_Solarweb:
@@ -48,19 +54,18 @@ class Fronius_Solarweb:
     @property
     def _common_headers(self):
         return {
-            "accept": "application/json",
+            "Accept": "application/json",
             "AccessKeyId": self.access_key_id,
             "AccessKeyValue": self.access_key_value,
         }
 
-    @retry(
-        wait=wait_random_exponential(multiplier=1, max=60),
-        retry=retry_if_not_exception_type((ValidationError, NotAuthorizedException)),
-    )
     async def _check_api_response(self, response):
         if response.status_code == 401:
             logger.debug("Access unauthorised check solar.web access key values")
             raise NotAuthorizedException()
+        if response.status_code == 404:
+            logger.debug("Item not found check your PV system ID")
+            raise NotFoundException()
 
         response.raise_for_status()
 
@@ -73,9 +78,12 @@ class Fronius_Solarweb:
             raise
 
     @retry(
-        wait=wait_random_exponential(multiplier=1, max=60),
-        retry=retry_if_not_exception_type((ValidationError, NotAuthorizedException)),
-    )
+        wait=wait_random_exponential(multiplier=2, max=60),
+        retry=retry_if_not_exception_type(
+            (ValidationError, NotAuthorizedException, NotFoundException)
+        ),
+        stop=stop_after_attempt(MAX_ATTEMPTS),
+    )  # raises tenacity.RetryError if max attempts reached
     async def get_pvsystem_meta_data(self) -> PvSystemMetaData:
         logger.debug("Listing PV system meta data")
         r = await self.httpx_client.get(
@@ -86,8 +94,11 @@ class Fronius_Solarweb:
         return PvSystemMetaData(**json_data)
 
     @retry(
-        wait=wait_random_exponential(multiplier=1, max=60),
-        retry=retry_if_not_exception_type((ValidationError, NotAuthorizedException)),
+        wait=wait_random_exponential(multiplier=2, max=60),
+        retry=retry_if_not_exception_type(
+            (ValidationError, NotAuthorizedException, NotFoundException)
+        ),
+        stop=stop_after_attempt(MAX_ATTEMPTS),
     )
     async def get_devices_meta_data(self) -> list[DeviceMetaData]:
         logger.debug("Listing Device meta data")
@@ -99,8 +110,11 @@ class Fronius_Solarweb:
         return DevicesMetaData(**json_data).devices
 
     @retry(
-        wait=wait_random_exponential(multiplier=1, max=60),
-        retry=retry_if_not_exception_type((ValidationError, NotAuthorizedException)),
+        wait=wait_random_exponential(multiplier=2, max=60),
+        retry=retry_if_not_exception_type(
+            (ValidationError, NotAuthorizedException, NotFoundException)
+        ),
+        stop=stop_after_attempt(MAX_ATTEMPTS),
     )
     async def get_system_flow_data(self) -> PvSystemFlowData:
         logger.debug("Listing PV system flow data")

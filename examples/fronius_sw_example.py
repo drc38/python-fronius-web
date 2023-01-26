@@ -17,17 +17,16 @@ async def main():
         pv_system_id=creds.PV_SYSTEM_ID,
     )
 
-    pv_system_data = await fronius.get_pvsystem_meta_data()
-    devices_data = await fronius.get_devices_meta_data()
-    flow_data = await fronius.get_system_flow_data()
-
     print("Getting PV system meta data for ", creds.PV_SYSTEM_ID)
+    pv_system_data = await fronius.get_pvsystem_meta_data()
     print(pv_system_data)
 
     print("Getting Devices meta data")
+    devices_data = await fronius.get_devices_meta_data()
     print(devices_data)
 
     print("Getting power flow data")
+    flow_data = await fronius.get_system_flow_data()
     print(flow_data)
 
 

@@ -2,6 +2,10 @@ class NotAuthorizedException(ValueError):
     pass
 
 
+class NotFoundException(ValueError):
+    pass
+
+
 HTML_ERROR_CODES = {
     200: "OK",  # Successful
     204: "No content",  # Successful request but no data
