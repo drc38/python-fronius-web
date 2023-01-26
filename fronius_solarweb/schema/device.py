@@ -5,9 +5,9 @@ from pydantic import BaseModel
 
 
 class Firmware(BaseModel):
-    updateAvailable: bool
-    installedVersion: str
-    availableVersion: str
+    updateAvailable: bool | None
+    installedVersion: str | None
+    availableVersion: str | None
 
 
 class Sensor(BaseModel):
@@ -15,7 +15,7 @@ class Sensor(BaseModel):
     sensorName: str
     isActive: bool
     activationDate: datetime
-    deactivationDate: datetime
+    deactivationDate: Optional[datetime]
 
 
 class DeviceMetaData(BaseModel):
@@ -24,7 +24,7 @@ class DeviceMetaData(BaseModel):
     deviceId: str
     deviceName: str
     deviceManufacturer: str
-    serialnumber: str
+    serialnumber: Optional[str]
     deviceTypeDetails: Optional[str]
     dataloggerId: str
     nodeType: Optional[str]
@@ -32,14 +32,14 @@ class DeviceMetaData(BaseModel):
     numberPhases: Optional[int]
     peakPower: Optional[Any]
     nominalAcPower: Optional[float]
-    firmware: Firmware
+    firmware: Optional[Firmware]
     isActive: bool
     activationDate: datetime
-    deactivationDate: datetime
+    deactivationDate: Optional[datetime]
     # battery extras
     capacity: Optional[float]
     # sensor extras
-    sensors: Sensor
+    sensors: Optional[Sensor]
     # smart meter extras
     deviceCategory: Optional[str]
     deviceLocation: Optional[str]

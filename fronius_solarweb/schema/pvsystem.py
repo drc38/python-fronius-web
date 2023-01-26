@@ -1,44 +1,44 @@
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 
 from pydantic import BaseModel
 
 
 class Address(BaseModel):
-    street: str
-    zipCode: str
-    city: str
-    state: str
-    country: str
+    street: str | None
+    zipCode: str | None
+    city: str | None
+    state: str | None
+    country: str | None
 
 
 class Status(BaseModel):
     isOnline: bool
-    battMode: str
+    battMode: Optional[str]
 
 
 class PvSystemMetaData(BaseModel):
     pvSystemId: str
     name: str
     address: Address
-    timezone: datetime
+    timezone: Optional[datetime]
     pictureURL: str
     peakPower: float
-    meteoData: str
+    meteoData: str | None
     lastImport: datetime
     installationDate: datetime
 
 
 class PvSystemFlowData(BaseModel):
     pvSystemId: str
-    status: Status
-    address: Address
-    timezone: datetime
-    pictureURL: str
-    peakPower: float
-    meteoData: str
-    lastImport: datetime
-    installationDate: datetime
+    status: Optional[Status]
+    address: Optional[Address]
+    timezone: Optional[datetime]
+    pictureURL: Optional[str]
+    peakPower: Optional[float]
+    meteoData: str | None
+    lastImport: Optional[datetime]
+    installationDate: Optional[datetime]
 
 
 class Channel(BaseModel):
