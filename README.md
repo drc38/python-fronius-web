@@ -10,9 +10,9 @@ Python client for the Fronius [Solar.web API](https://www.fronius.com/~/download
 
 ## Usage
 
-Although intended as a library a `fronius_sw_example.py` is provided for testing purposes.
+Although intended as a library [`fronius_sw_example.py`](https://github.com/drc38/python-fronius-web/blob/main/examples/fronius_sw_example.py) is provided for testing purposes.
 
-To provide authentication and system id for the example is done via environment variables, e.g. on nix systems:
+Authentication and PV system id for the example is provided via environment variables, e.g. on nix systems:
 
 ```
 export ACCESS_KEY_ID=FKIAFEF58CFEFA94486F9C804CF6077A01AB
