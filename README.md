@@ -18,7 +18,4 @@ To provide authentication and system id for the example is done via environment 
 export ACCESS_KEY_ID=FKIAFEF58CFEFA94486F9C804CF6077A01AB
 export ACCESS_KEY_VALUE=47c076bc-23e5-4949-37a6-4bcfcf8d21d6
 export PV_SYSTEM_ID=20bb600e-019b-4e03-9df3-a0a900cda689
-
 ```
-
-
