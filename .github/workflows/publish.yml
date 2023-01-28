@@ -16,7 +16,7 @@ jobs:
       - uses: abatilo/actions-poetry@v2
       - name: Bump up version
         run: |
-          poetry version ${{ github.event.inputs.version }}
+          poetry version ${{ github.ref_name }}
           
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v1.16
