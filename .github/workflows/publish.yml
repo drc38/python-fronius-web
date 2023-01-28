@@ -9,11 +9,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Bump up version
-      run: |
-        poetry version ${{ github.event.inputs.version }}
-        git add pyproject.toml
-        git commit -m "bump up ${{ github.event.inputs.version }} version from workflow"
-        git push
+        run: |
+          poetry version ${{ github.event.inputs.version }}
+          git add pyproject.toml
+          git commit -m "bump up ${{ github.event.inputs.version }} version from workflow"
+          git push
 
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v1.16
