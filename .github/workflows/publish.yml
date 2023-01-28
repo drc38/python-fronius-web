@@ -8,7 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          
       - name: Bump up version
+        uses: abatilo/actions-poetry@v2
         run: |
           poetry version ${{ github.event.inputs.version }}
           git add pyproject.toml
