@@ -87,7 +87,7 @@ class Fronius_Solarweb:
         stop=stop_after_attempt(MAX_ATTEMPTS),
     )
     async def get_devices_meta_data(self) -> list[DeviceMetaData]:
-        _LOGGER.debug("Listing Device meta data")
+        _LOGGER.debug("Listing Devices meta data")
         r = await self.httpx_client.get(
             f"{SW_BASE_URL}/pvsystems/{self.pv_system_id}/devices",
             headers=self._common_headers,
@@ -102,10 +102,10 @@ class Fronius_Solarweb:
         ),
         stop=stop_after_attempt(MAX_ATTEMPTS),
     )
-    async def get_system_flow_data(self) -> PvSystemFlowData:
+    async def get_system_flow_data(self, tz: str="zulu") -> PvSystemFlowData:
         _LOGGER.debug("Listing PV system flow data")
         r = await self.httpx_client.get(
-            f"{SW_BASE_URL}/pvsystems/{self.pv_system_id}/flowdata",
+            f"{SW_BASE_URL}/pvsystems/{self.pv_system_id}/flowdata?timezone={tz}",
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
