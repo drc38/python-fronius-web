@@ -15,7 +15,7 @@ class Channel(BaseModel):
     channelName: Optional[str]
     channelType: Optional[str]
     unit: Optional[str]
-    value: Optional[float]
+    value: Optional[float | str]
 
 class Data(BaseModel):
     logDateTime: Optional[datetime]
@@ -40,6 +40,4 @@ class PvSystemFlowData(BaseModel):
     pvSystemId: str
     status: Optional[Status]
     data: Optional[Data]
-
-
-
+    

@@ -15,7 +15,7 @@ class Links(BaseModel):
     self: Optional[str]
     next: Optional[str]
     last: Optional[str]
-    totalItemsCount: Optional[int]
+    totalItemsCount: int
 
 class Power(BaseModel):
     dc1: Optional[float] 
