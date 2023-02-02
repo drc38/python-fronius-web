@@ -9,6 +9,7 @@ class Firmware(BaseModel):
     installedVersion: Optional[str]
     availableVersion: Optional[str]
 
+
 class Links(BaseModel):
     first: Optional[str]
     prev: Optional[str]
@@ -17,18 +18,20 @@ class Links(BaseModel):
     last: Optional[str]
     totalItemsCount: int
 
+
 class Power(BaseModel):
-    dc1: Optional[float] 
-    dc2: Optional[float] 
-    dc3: Optional[float] 
-    dc4: Optional[float] 
+    dc1: Optional[float]
+    dc2: Optional[float]
+    dc3: Optional[float]
+    dc4: Optional[float]
+
 
 class Sensor(BaseModel):
     sensorType: Optional[str]
     sensorName: Optional[str]
     isActive: Optional[bool]
     activationDate: Optional[datetime]
-    deactivationDate: Optional[datetime] 
+    deactivationDate: Optional[datetime]
 
 
 class DeviceMetaData(BaseModel):
@@ -38,29 +41,29 @@ class DeviceMetaData(BaseModel):
     deviceName: Optional[str]
     deviceManufacturer: Optional[str]
     serialnumber: Optional[str]
-    deviceTypeDetails: Optional[str] 
+    deviceTypeDetails: Optional[str]
     dataloggerId: Optional[str]
-    nodeType: Optional[str] 
-    numberMPPTrackers: Optional[int] 
-    numberPhases: Optional[int] 
-    peakPower: Optional[Power] 
-    nominalAcPower: Optional[float] 
-    firmware: Optional[Firmware] 
+    nodeType: Optional[str]
+    numberMPPTrackers: Optional[int]
+    numberPhases: Optional[int]
+    peakPower: Optional[Power]
+    nominalAcPower: Optional[float]
+    firmware: Optional[Firmware]
     isActive: Optional[bool]
     activationDate: Optional[datetime]
-    deactivationDate: Optional[datetime] 
+    deactivationDate: Optional[datetime]
     # battery extras
-    capacity: Optional[float] 
+    capacity: Optional[float]
     # sensor extras
-    sensors: Optional[Sensor] 
+    sensors: Optional[Sensor]
     # smart meter extras
-    deviceCategory: Optional[str] 
-    deviceLocation: Optional[str] 
+    deviceCategory: Optional[str]
+    deviceLocation: Optional[str]
     # EV charger extras
-    isOnline: Optional[bool] 
+    isOnline: Optional[bool]
     # Data logger extras
     # Swagger documentation extras
-    ipAddressV4: Optional[str] 
+    ipAddressV4: Optional[str]
 
 
 class DevicesMetaData(BaseModel):
