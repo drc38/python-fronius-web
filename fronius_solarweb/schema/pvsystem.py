@@ -3,6 +3,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from .device import Links
+
 
 class Address(BaseModel):
     street: Optional[str]
@@ -11,19 +13,23 @@ class Address(BaseModel):
     state: Optional[str]
     country: Optional[str]
 
+
 class Channel(BaseModel):
     channelName: Optional[str]
     channelType: Optional[str]
     unit: Optional[str]
     value: Optional[float | str]
 
+
 class Data(BaseModel):
     logDateTime: Optional[datetime]
     channels: Optional[Channel]
 
+
 class Status(BaseModel):
     isOnline: bool
     battMode: Optional[str]
+
 
 class PvSystemMetaData(BaseModel):
     pvSystemId: str
@@ -36,8 +42,14 @@ class PvSystemMetaData(BaseModel):
     lastImport: Optional[datetime]
     installationDate: Optional[datetime]
 
+
+class PvSystemsMetaData(BaseModel):
+    pvSystems: Optional[list[PvSystemMetaData]]
+    # Swagger documentation extras
+    links: Optional[Links]
+
+
 class PvSystemFlowData(BaseModel):
     pvSystemId: str
     status: Optional[Status]
     data: Optional[Data]
-    

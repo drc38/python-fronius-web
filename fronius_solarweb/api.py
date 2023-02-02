@@ -11,8 +11,9 @@ from tenacity import (
 
 from .errors import NotAuthorizedException, NotFoundException
 
-from .schema.pvsystem import PvSystemMetaData, PvSystemFlowData
+from .schema.pvsystem import PvSystemMetaData, PvSystemsMetaData, PvSystemFlowData
 from .schema.device import DeviceMetaData, DevicesMetaData
+from .schema.service import ReleaseInfo
 
 _LOGGER = logging.getLogger(__name__)
 SW_BASE_URL = "https://api.solarweb.com/swqapi"
@@ -24,7 +25,7 @@ class Fronius_Solarweb:
         self,
         access_key_id: str,
         access_key_value: str,
-        pv_system_id: str,
+        pv_system_id: str = None,
         httpx_client: AsyncClient = None,
     ):
         """
@@ -36,7 +37,10 @@ class Fronius_Solarweb:
         :param access_key_value: A secret value (GUID),
             e.g. "47c076bc-23e5-4949-37a6-4bcfcf8d21d6", which
             you need to know for authorization of API calls.
-        :param httpx_client:
+        :param pv_system_id (optional): Unique PV system ID,
+            this can be provided or determined from a call to
+            get_pvsystems_meta_data()
+        :param httpx_client (optional)
         """
         self.access_key_id = access_key_id
         self.access_key_value = access_key_value
@@ -62,6 +66,38 @@ class Fronius_Solarweb:
         response.raise_for_status()
 
         return response.json()
+
+    @retry(
+        wait=wait_random_exponential(multiplier=2, max=60),
+        retry=retry_if_not_exception_type(
+            (ValidationError, NotAuthorizedException, NotFoundException)
+        ),
+        stop=stop_after_attempt(MAX_ATTEMPTS),
+    )  # raises tenacity.RetryError if max attempts reached
+    async def get_api_release_info(self) -> ReleaseInfo:
+        _LOGGER.debug("Listing SolarWeb api release info")
+        r = await self.httpx_client.get(
+            f"{SW_BASE_URL}/info/release",
+            headers=self._common_headers,
+        )
+        json_data = await self._check_api_response(r)
+        return ReleaseInfo(**json_data)
+
+    @retry(
+        wait=wait_random_exponential(multiplier=2, max=60),
+        retry=retry_if_not_exception_type(
+            (ValidationError, NotAuthorizedException, NotFoundException)
+        ),
+        stop=stop_after_attempt(MAX_ATTEMPTS),
+    )  # raises tenacity.RetryError if max attempts reached
+    async def get_pvsystems_meta_data(self) -> list[PvSystemMetaData]:
+        _LOGGER.debug("Listing PV systems meta data")
+        r = await self.httpx_client.get(
+            f"{SW_BASE_URL}/pvsystems",
+            headers=self._common_headers,
+        )
+        json_data = await self._check_api_response(r)
+        return PvSystemsMetaData(**json_data).pvSystems
 
     @retry(
         wait=wait_random_exponential(multiplier=2, max=60),
@@ -102,7 +138,7 @@ class Fronius_Solarweb:
         ),
         stop=stop_after_attempt(MAX_ATTEMPTS),
     )
-    async def get_system_flow_data(self, tz: str="zulu") -> PvSystemFlowData:
+    async def get_system_flow_data(self, tz: str = "zulu") -> PvSystemFlowData:
         _LOGGER.debug("Listing PV system flow data")
         r = await self.httpx_client.get(
             f"{SW_BASE_URL}/pvsystems/{self.pv_system_id}/flowdata?timezone={tz}",
