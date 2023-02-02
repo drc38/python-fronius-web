@@ -9,6 +9,14 @@ class Firmware(BaseModel):
     installedVersion: Optional[str]
     availableVersion: Optional[str]
 
+class Links(BaseModel):
+    first: Optional[str]
+    prev: Optional[str]
+    self: Optional[str]
+    next: Optional[str]
+    last: Optional[str]
+    totalItemsCount: Optional[int]
+
 class Power(BaseModel):
     dc1: Optional[float] 
     dc2: Optional[float] 
@@ -57,3 +65,5 @@ class DeviceMetaData(BaseModel):
 
 class DevicesMetaData(BaseModel):
     devices: Optional[list[DeviceMetaData]]
+    # Swagger documentation extras
+    links: Optional[Links]
