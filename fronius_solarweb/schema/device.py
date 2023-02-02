@@ -1,52 +1,59 @@
 from datetime import datetime
-from typing import Any, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 
 
 class Firmware(BaseModel):
-    updateAvailable: bool | None
-    installedVersion: str | None
-    availableVersion: str | None
+    updateAvailable: Optional[bool]
+    installedVersion: Optional[str]
+    availableVersion: Optional[str]
 
+class Power(BaseModel):
+    dc1: Optional[float] 
+    dc2: Optional[float] 
+    dc3: Optional[float] 
+    dc4: Optional[float] 
 
 class Sensor(BaseModel):
-    sensorType: str
-    sensorName: str
-    isActive: bool
-    activationDate: datetime
-    deactivationDate: Optional[datetime]
+    sensorType: Optional[str]
+    sensorName: Optional[str]
+    isActive: Optional[bool]
+    activationDate: Optional[datetime]
+    deactivationDate: Optional[datetime] 
 
 
 class DeviceMetaData(BaseModel):
     # inverter
-    deviceType: str
+    deviceType: Optional[str]
     deviceId: str
-    deviceName: str
-    deviceManufacturer: str
+    deviceName: Optional[str]
+    deviceManufacturer: Optional[str]
     serialnumber: Optional[str]
-    deviceTypeDetails: Optional[str]
-    dataloggerId: str
-    nodeType: Optional[str]
-    numberMPPTrackers: Optional[int]
-    numberPhases: Optional[int]
-    peakPower: Optional[Any]
-    nominalAcPower: Optional[float]
-    firmware: Optional[Firmware]
-    isActive: bool
-    activationDate: datetime
-    deactivationDate: Optional[datetime]
+    deviceTypeDetails: Optional[str] 
+    dataloggerId: Optional[str]
+    nodeType: Optional[str] 
+    numberMPPTrackers: Optional[int] 
+    numberPhases: Optional[int] 
+    peakPower: Optional[Power] 
+    nominalAcPower: Optional[float] 
+    firmware: Optional[Firmware] 
+    isActive: Optional[bool]
+    activationDate: Optional[datetime]
+    deactivationDate: Optional[datetime] 
     # battery extras
-    capacity: Optional[float]
+    capacity: Optional[float] 
     # sensor extras
-    sensors: Optional[Sensor]
+    sensors: Optional[Sensor] 
     # smart meter extras
-    deviceCategory: Optional[str]
-    deviceLocation: Optional[str]
+    deviceCategory: Optional[str] 
+    deviceLocation: Optional[str] 
     # EV charger extras
-    isOnline: Optional[bool]
+    isOnline: Optional[bool] 
     # Data logger extras
+    # Swagger documentation extras
+    ipAddressV4: Optional[str] 
 
 
 class DevicesMetaData(BaseModel):
-    devices: list[DeviceMetaData] | None
+    devices: Optional[list[DeviceMetaData]]
