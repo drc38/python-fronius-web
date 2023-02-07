@@ -23,7 +23,7 @@ class Channel(BaseModel):
 
 class Data(BaseModel):
     logDateTime: Optional[datetime]
-    channels: Optional[Channel]
+    channels: Optional[list[Channel]]
 
 
 class Status(BaseModel):
