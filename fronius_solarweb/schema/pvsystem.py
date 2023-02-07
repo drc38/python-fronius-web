@@ -33,6 +33,7 @@ class Status(BaseModel):
 
 class PvSystemMetaData(BaseModel):
     pvSystemId: str
+    name: Optional[str]
     status: Optional[Status]
     address: Optional[Address]
     timezone: Optional[datetime]
