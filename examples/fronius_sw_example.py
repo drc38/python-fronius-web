@@ -37,6 +37,10 @@ async def main():
     flow_data = await fronius.get_system_flow_data()
     print(f"{flow_data}\n")
 
+    print("Getting aggregated V2 data:")
+    aggr_data = await fronius.get_system_aggr_data_v2()
+    print(f"{aggr_data}\n")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
