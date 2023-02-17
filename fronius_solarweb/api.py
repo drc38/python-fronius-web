@@ -11,7 +11,12 @@ from tenacity import (
 
 from .errors import NotAuthorizedException, NotFoundException
 
-from .schema.pvsystem import PvSystemMetaData, PvSystemsMetaData, PvSystemFlowData
+from .schema.pvsystem import (
+    PvSystemMetaData,
+    PvSystemsMetaData,
+    PvSystemFlowData,
+    PvSystemAggrDataV2,
+)
 from .schema.device import DeviceMetaData, DevicesMetaData
 from .schema.service import ReleaseInfo
 
@@ -146,3 +151,14 @@ class Fronius_Solarweb:
         )
         json_data = await self._check_api_response(r)
         return PvSystemFlowData(**json_data)
+
+    async def get_system_aggr_data_v2(
+        self, period: str = "total"
+    ) -> PvSystemAggrDataV2:
+        _LOGGER.debug("Listing PV system aggregated v2 data")
+        r = await self.httpx_client.get(
+            f"{SW_BASE_URL}/pvsystems/{self.pv_system_id}/aggrdata?period={period}",
+            headers=self._common_headers,
+        )
+        json_data = await self._check_api_response(r)
+        return PvSystemAggrDataV2(**json_data)

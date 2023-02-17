@@ -26,6 +26,11 @@ class Data(BaseModel):
     channels: Optional[list[Channel]]
 
 
+class AggrData(BaseModel):
+    logDateTime: Optional[str]
+    channels: Optional[list[Channel]]
+
+
 class Status(BaseModel):
     isOnline: bool
     battMode: Optional[str]
@@ -54,3 +59,9 @@ class PvSystemFlowData(BaseModel):
     pvSystemId: str
     status: Optional[Status]
     data: Optional[Data]
+
+
+class PvSystemAggrDataV2(BaseModel):
+    pvSystemId: str
+    data: Optional[list[AggrData]]
+    links: Optional[Links]
