@@ -12,7 +12,7 @@ issues = "https://github.com/drc38/python-fronius-web/issues"
 
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10"
 httpx = ">=0.23,<0.25"
 pydantic = "^1.10"
 tenacity = "^8.1"
