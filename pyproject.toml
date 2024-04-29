@@ -22,7 +22,7 @@ tenacity = "^8.1"
 black = "^24.1"
 isort = "^5.10.1"
 pylint = "^2.15"
-pytest = "^7.1"
+pytest = "^8.2"
 pre-commit = "^3.0.2"
 
 [build-system]
