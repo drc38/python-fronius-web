@@ -1,5 +1,6 @@
 import asyncio
-from pydantic import BaseSettings, SecretStr
+from pydantic import SecretStr
+from pydantic_settings import BaseSettings
 from fronius_solarweb.api import Fronius_Solarweb
 
 
