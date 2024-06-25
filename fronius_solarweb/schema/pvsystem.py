@@ -7,61 +7,61 @@ from .device import Links
 
 
 class Address(BaseModel):
-    street: Optional[str]
-    zipCode: Optional[str]
-    city: Optional[str]
-    state: Optional[str]
-    country: Optional[str]
+    street: Optional[str] = None
+    zipCode: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    country: Optional[str] = None
 
 
 class Channel(BaseModel):
-    channelName: Optional[str]
-    channelType: Optional[str]
-    unit: Optional[str]
-    value: Optional[float | str]
+    channelName: Optional[str] = None
+    channelType: Optional[str] = None
+    unit: Optional[str] = None
+    value: Optional[float | str] = None
 
 
 class Data(BaseModel):
-    logDateTime: Optional[datetime]
-    channels: Optional[list[Channel]]
+    logDateTime: Optional[datetime] = None
+    channels: Optional[list[Channel]] = None
 
 
 class AggrData(BaseModel):
-    logDateTime: Optional[str]
-    channels: Optional[list[Channel]]
+    logDateTime: Optional[str] = None
+    channels: Optional[list[Channel]] = None
 
 
 class Status(BaseModel):
     isOnline: bool
-    battMode: Optional[str]
+    battMode: Optional[str] = None
 
 
 class PvSystemMetaData(BaseModel):
     pvSystemId: str
-    name: Optional[str]
-    status: Optional[Status]
-    address: Optional[Address]
-    timezone: Optional[datetime]
-    pictureURL: Optional[str]
-    peakPower: Optional[float]
-    meteoData: Optional[str]
-    lastImport: Optional[datetime]
-    installationDate: Optional[datetime]
+    name: Optional[str] = None
+    status: Optional[Status] = None
+    address: Optional[Address] = None
+    timezone: Optional[datetime] = None
+    pictureURL: Optional[str] = None
+    peakPower: Optional[float] = None
+    meteoData: Optional[str] = None
+    lastImport: Optional[datetime] = None
+    installationDate: Optional[datetime] = None
 
 
 class PvSystemsMetaData(BaseModel):
-    pvSystems: Optional[list[PvSystemMetaData]]
+    pvSystems: Optional[list[PvSystemMetaData]] = None
     # Swagger documentation extras
-    links: Optional[Links]
+    links: Optional[Links] = None
 
 
 class PvSystemFlowData(BaseModel):
     pvSystemId: str
-    status: Optional[Status]
-    data: Optional[Data]
+    status: Optional[Status] = None
+    data: Optional[Data] = None
 
 
 class PvSystemAggrDataV2(BaseModel):
     pvSystemId: str
-    data: Optional[list[AggrData]]
-    links: Optional[Links]
+    data: Optional[list[AggrData]] = None
+    links: Optional[Links] = None

@@ -5,68 +5,68 @@ from pydantic import BaseModel
 
 
 class Firmware(BaseModel):
-    updateAvailable: Optional[bool]
-    installedVersion: Optional[str]
-    availableVersion: Optional[str]
+    updateAvailable: Optional[bool] = None
+    installedVersion: Optional[str] = None
+    availableVersion: Optional[str] = None
 
 
 class Links(BaseModel):
-    first: Optional[str]
-    prev: Optional[str]
-    self: Optional[str]
-    next: Optional[str]
-    last: Optional[str]
+    first: Optional[str] = None
+    prev: Optional[str] = None
+    self: Optional[str] = None
+    next: Optional[str] = None
+    last: Optional[str] = None
     totalItemsCount: int
 
 
 class Power(BaseModel):
-    dc1: Optional[float]
-    dc2: Optional[float]
-    dc3: Optional[float]
-    dc4: Optional[float]
+    dc1: Optional[float] = None
+    dc2: Optional[float] = None
+    dc3: Optional[float] = None
+    dc4: Optional[float] = None
 
 
 class Sensor(BaseModel):
-    sensorType: Optional[str]
-    sensorName: Optional[str]
-    isActive: Optional[bool]
-    activationDate: Optional[datetime]
-    deactivationDate: Optional[datetime]
+    sensorType: Optional[str] = None
+    sensorName: Optional[str] = None
+    isActive: Optional[bool] = None
+    activationDate: Optional[datetime] = None
+    deactivationDate: Optional[datetime] = None
 
 
 class DeviceMetaData(BaseModel):
     # inverter
-    deviceType: Optional[str]
+    deviceType: Optional[str] = None
     deviceId: str
-    deviceName: Optional[str]
-    deviceManufacturer: Optional[str]
-    serialnumber: Optional[str]
-    deviceTypeDetails: Optional[str]
-    dataloggerId: Optional[str]
-    nodeType: Optional[str]
-    numberMPPTrackers: Optional[int]
-    numberPhases: Optional[int]
-    peakPower: Optional[Power]
-    nominalAcPower: Optional[float]
-    firmware: Optional[Firmware]
-    isActive: Optional[bool]
-    activationDate: Optional[datetime]
-    deactivationDate: Optional[datetime]
+    deviceName: Optional[str] = None
+    deviceManufacturer: Optional[str] = None
+    serialnumber: Optional[str] = None
+    deviceTypeDetails: Optional[str] = None
+    dataloggerId: Optional[str] = None
+    nodeType: Optional[str] = None
+    numberMPPTrackers: Optional[int] = None
+    numberPhases: Optional[int] = None
+    peakPower: Optional[Power] = None
+    nominalAcPower: Optional[float] = None
+    firmware: Optional[Firmware] = None
+    isActive: Optional[bool] = None
+    activationDate: Optional[datetime] = None
+    deactivationDate: Optional[datetime] = None
     # battery extras
-    capacity: Optional[float]
+    capacity: Optional[float] = None
     # sensor extras
-    sensors: Optional[Sensor]
+    sensors: Optional[Sensor] = None
     # smart meter extras
-    deviceCategory: Optional[str]
-    deviceLocation: Optional[str]
+    deviceCategory: Optional[str] = None
+    deviceLocation: Optional[str] = None
     # EV charger extras
-    isOnline: Optional[bool]
+    isOnline: Optional[bool] = None
     # Data logger extras
     # Swagger documentation extras
-    ipAddressV4: Optional[str]
+    ipAddressV4: Optional[str] = None
 
 
 class DevicesMetaData(BaseModel):
-    devices: Optional[list[DeviceMetaData]]
+    devices: Optional[list[DeviceMetaData]] = None
     # Swagger documentation extras
-    links: Optional[Links]
+    links: Optional[Links] = None

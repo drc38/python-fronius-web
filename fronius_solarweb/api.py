@@ -86,7 +86,7 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return ReleaseInfo(**json_data)
+        return ReleaseInfo.model_validate(json_data)
 
     @retry(
         wait=wait_random_exponential(multiplier=2, max=60),
@@ -102,7 +102,7 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return PvSystemsMetaData(**json_data).pvSystems
+        return PvSystemsMetaData.model_validate(json_data).pvSystems
 
     @retry(
         wait=wait_random_exponential(multiplier=2, max=60),
@@ -118,7 +118,7 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return PvSystemMetaData(**json_data)
+        return PvSystemMetaData.model_validate(json_data)
 
     @retry(
         wait=wait_random_exponential(multiplier=2, max=60),
@@ -134,7 +134,7 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return DevicesMetaData(**json_data).devices
+        return DevicesMetaData.model_validate(json_data).devices
 
     @retry(
         wait=wait_random_exponential(multiplier=2, max=60),
@@ -150,7 +150,7 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return PvSystemFlowData(**json_data)
+        return PvSystemFlowData.model_validate(json_data)
 
     async def get_system_aggr_data_v2(
         self, period: str = "total"
@@ -161,4 +161,4 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return PvSystemAggrDataV2(**json_data)
+        return PvSystemAggrDataV2.model_validate(json_data)
