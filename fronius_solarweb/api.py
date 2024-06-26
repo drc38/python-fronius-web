@@ -69,7 +69,7 @@ class Fronius_Solarweb:
             raise NotFoundException()
 
         response.raise_for_status()
-
+        # returns dict type not string
         return response.json()
 
     @retry(
@@ -86,7 +86,14 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return ReleaseInfo(**json_data)
+        try:
+            model_data = ReleaseInfo.model_validate(json_data)
+        except ValidationError as e:
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
+            _LOGGER.error(e)
+        return model_data
 
     @retry(
         wait=wait_random_exponential(multiplier=2, max=60),
@@ -102,7 +109,14 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return PvSystemsMetaData(**json_data).pvSystems
+        try:
+            model_data = PvSystemsMetaData.model_validate(json_data).pvSystems
+        except ValidationError as e:
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
+            _LOGGER.error(e)
+        return model_data
 
     @retry(
         wait=wait_random_exponential(multiplier=2, max=60),
@@ -118,7 +132,14 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return PvSystemMetaData(**json_data)
+        try:
+            model_data = PvSystemMetaData.model_validate(json_data)
+        except ValidationError as e:
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
+            _LOGGER.error(e)
+        return model_data
 
     @retry(
         wait=wait_random_exponential(multiplier=2, max=60),
@@ -134,7 +155,14 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return DevicesMetaData(**json_data).devices
+        try:
+            model_data = DevicesMetaData.model_validate(json_data).devices
+        except ValidationError as e:
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
+            _LOGGER.error(e)
+        return model_data
 
     @retry(
         wait=wait_random_exponential(multiplier=2, max=60),
@@ -150,7 +178,14 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return PvSystemFlowData(**json_data)
+        try:
+            model_data = PvSystemFlowData.model_validate(json_data)
+        except ValidationError as e:
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
+            _LOGGER.error(e)
+        return model_data
 
     async def get_system_aggr_data_v2(
         self, period: str = "total"
@@ -161,4 +196,11 @@ class Fronius_Solarweb:
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
-        return PvSystemAggrDataV2(**json_data)
+        try:
+            model_data = PvSystemAggrDataV2.model_validate(json_data)
+        except ValidationError as e:
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
+            _LOGGER.error(e)
+        return model_data
