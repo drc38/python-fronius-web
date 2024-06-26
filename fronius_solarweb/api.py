@@ -89,7 +89,9 @@ class Fronius_Solarweb:
         try:
             model_data = ReleaseInfo.model_validate_json(json_data)
         except ValidationError as e:
-            _LOGGER.error(f"Unable to validate data receieved from SolarWeb api: '{json_data}'")
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
             raise e
         return model_data
 
@@ -110,7 +112,9 @@ class Fronius_Solarweb:
         try:
             model_data = PvSystemsMetaData.model_validate_json(json_data).pvSystems
         except ValidationError as e:
-            _LOGGER.error(f"Unable to validate data receieved from SolarWeb api: '{json_data}'")
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
             raise e
         return model_data
 
@@ -131,7 +135,9 @@ class Fronius_Solarweb:
         try:
             model_data = PvSystemMetaData.model_validate_json(json_data)
         except ValidationError as e:
-            _LOGGER.error(f"Unable to validate data receieved from SolarWeb api: '{json_data}'")
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
             raise e
         return model_data
 
@@ -152,7 +158,9 @@ class Fronius_Solarweb:
         try:
             model_data = DevicesMetaData.model_validate_json(json_data).devices
         except ValidationError as e:
-            _LOGGER.error(f"Unable to validate data receieved from SolarWeb api: '{json_data}'")
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
             raise e
         return model_data
 
@@ -173,7 +181,9 @@ class Fronius_Solarweb:
         try:
             model_data = PvSystemFlowData.model_validate_json(json_data)
         except ValidationError as e:
-            _LOGGER.error(f"Unable to validate data receieved from SolarWeb api: '{json_data}'")
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
             raise e
         return model_data
 
@@ -189,6 +199,8 @@ class Fronius_Solarweb:
         try:
             model_data = PvSystemAggrDataV2.model_validate_json(json_data)
         except ValidationError as e:
-            _LOGGER.error(f"Unable to validate data receieved from SolarWeb api: '{json_data}'")
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
             raise e
         return model_data
