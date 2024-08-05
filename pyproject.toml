@@ -15,7 +15,7 @@ issues = "https://github.com/drc38/python-fronius-web/issues"
 python = ">=3.10"
 httpx = ">=0.23"
 pydantic = ">=2,<3.0"
-tenacity = "^8.1"
+tenacity = ">=8.1,<10.0"
 
 
 [tool.poetry.dev-dependencies]
