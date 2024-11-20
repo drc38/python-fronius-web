@@ -8,6 +8,7 @@ from tenacity import (
     wait_random_exponential,
     stop_after_attempt,
 )
+from typing import List
 
 from .errors import NotAuthorizedException, NotFoundException
 
@@ -188,11 +189,14 @@ class Fronius_Solarweb:
         return model_data
 
     async def get_system_aggr_data_v2(
-        self, period: str = "total"
+        self, period: str = "total", channels: List[str] | None = None
     ) -> PvSystemAggrDataV2:
         _LOGGER.debug("Listing PV system aggregated v2 data")
+        _url = f"{SW_BASE_URL}/pvsystems/{self.pv_system_id}/aggrdata?period={period}"
+        if channels is not None:
+            _url += f"&channel={','.join(channels)}"
         r = await self.httpx_client.get(
-            f"{SW_BASE_URL}/pvsystems/{self.pv_system_id}/aggrdata?period={period}",
+            _url,
             headers=self._common_headers,
         )
         json_data = await self._check_api_response(r)
