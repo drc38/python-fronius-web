@@ -23,7 +23,7 @@ black = "^24.1"
 isort = "^5.10.1"
 pylint = "^3.2"
 pytest = "^8.2"
-pre-commit = "^3.0.2"
+pre-commit = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
