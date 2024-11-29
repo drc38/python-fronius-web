@@ -215,7 +215,7 @@ class Fronius_Solarweb:
         self, start: datetime, end: datetime, channel: str | None = None
     ) -> HistoricalValues:
         _LOGGER.debug("Listing historical data")
-        _url = f"{SW_BASE_URL}/pvsystems/{self.pv_system_id}/histdata?from={start.isoformat(timespec="seconds")}Z?to={end.isoformat(timespec="seconds")}Z"
+        _url = f"{SW_BASE_URL}/pvsystems/{self.pv_system_id}/histdata?from={start.isoformat(timespec='seconds')}Z&to={end.isoformat(timespec='seconds')}Z"
         if channel is not None:
             _url += f"&channel={channel}"
         r = await self.httpx_client.get(
