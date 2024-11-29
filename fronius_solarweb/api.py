@@ -211,6 +211,13 @@ class Fronius_Solarweb:
             _LOGGER.error(e)
         return model_data
 
+    @retry(
+        wait=wait_random_exponential(multiplier=2, max=60),
+        retry=retry_if_not_exception_type(
+            (ValidationError, NotAuthorizedException, NotFoundException)
+        ),
+        stop=stop_after_attempt(MAX_ATTEMPTS),
+    )  # raises tenacity.RetryError if max attempts reached
     async def get_hist_data(
         self, start: datetime, end: datetime, channel: str | None = None
     ) -> HistoricalValues:
