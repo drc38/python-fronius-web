@@ -190,6 +190,13 @@ class Fronius_Solarweb:
             _LOGGER.error(e)
         return model_data
 
+    @retry(
+        wait=wait_random_exponential(multiplier=2, max=60),
+        retry=retry_if_not_exception_type(
+            (ValidationError, NotAuthorizedException, NotFoundException)
+        ),
+        stop=stop_after_attempt(MAX_ATTEMPTS),
+    )
     async def get_system_aggr_data_v2(
         self, period: str = "total", channels: List[str] | None = None
     ) -> PvSystemAggrDataV2:
