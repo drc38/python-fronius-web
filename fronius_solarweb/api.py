@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 
 from httpx import AsyncClient
@@ -19,6 +20,7 @@ from .schema.pvsystem import (
     PvSystemAggrDataV2,
 )
 from .schema.device import DeviceMetaData, DevicesMetaData
+from .schema.hist import HistoricalValues
 from .schema.service import ReleaseInfo
 
 _LOGGER = logging.getLogger(__name__)
@@ -202,6 +204,34 @@ class Fronius_Solarweb:
         json_data = await self._check_api_response(r)
         try:
             model_data = PvSystemAggrDataV2.model_validate(json_data)
+        except ValidationError as e:
+            _LOGGER.error(
+                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+            )
+            _LOGGER.error(e)
+        return model_data
+
+    @retry(
+        wait=wait_random_exponential(multiplier=2, max=60),
+        retry=retry_if_not_exception_type(
+            (ValidationError, NotAuthorizedException, NotFoundException)
+        ),
+        stop=stop_after_attempt(MAX_ATTEMPTS),
+    )  # raises tenacity.RetryError if max attempts reached
+    async def get_hist_data(
+        self, start: datetime, end: datetime, channel: str | None = None
+    ) -> HistoricalValues:
+        _LOGGER.debug("Listing historical data")
+        _url = f"{SW_BASE_URL}/pvsystems/{self.pv_system_id}/histdata?from={start.isoformat(timespec='seconds')}Z&to={end.isoformat(timespec='seconds')}Z"
+        if channel is not None:
+            _url += f"&channel={channel}"
+        r = await self.httpx_client.get(
+            _url,
+            headers=self._common_headers,
+        )
+        json_data = await self._check_api_response(r)
+        try:
+            model_data = HistoricalValues.model_validate(json_data)
         except ValidationError as e:
             _LOGGER.error(
                 f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
