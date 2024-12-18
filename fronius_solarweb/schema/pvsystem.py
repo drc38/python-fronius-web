@@ -31,15 +31,14 @@ class AggrData(BaseModel):
     channels: Optional[list[Channel]] = None
 
 
-class Status(BaseModel):
+class EnergyFlowStatus(BaseModel):
     isOnline: bool
-    battMode: Optional[str] = None
+    battMode: Optional[float] = None
 
 
 class PvSystemMetaData(BaseModel):
     pvSystemId: str
     name: Optional[str] = None
-    status: Optional[Status] = None
     address: Optional[Address] = None
     timezone: Optional[datetime] = None
     pictureURL: Optional[str] = None
@@ -57,7 +56,7 @@ class PvSystemsMetaData(BaseModel):
 
 class PvSystemFlowData(BaseModel):
     pvSystemId: str
-    status: Optional[Status] = None
+    status: Optional[EnergyFlowStatus] = None
     data: Optional[Data] = None
 
 
