@@ -33,7 +33,7 @@ class AggrData(BaseModel):
 
 class EnergyFlowStatus(BaseModel):
     isOnline: bool
-    battMode: Optional[float] = None
+    battMode: Optional[float | str] = None
 
 
 class PvSystemMetaData(BaseModel):
