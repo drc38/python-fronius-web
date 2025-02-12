@@ -25,19 +25,22 @@ from .schema.service import ReleaseInfo
 
 _LOGGER = logging.getLogger(__name__)
 SW_BASE_URL = "https://api.solarweb.com/swqapi"
+JWT_BASE_URL = "https://swqapi.solarweb.com/iam/jwt"
 MAX_ATTEMPTS = 5
 
 
 class Fronius_Solarweb:
     def __init__(
         self,
-        access_key_id: str,
-        access_key_value: str,
+        access_key_id: str = None,
+        access_key_value: str = None,
+        login_name: str = None,
+        login_password: str = None,
         pv_system_id: str = None,
         httpx_client: AsyncClient = None,
     ):
         """
-        Create an Fronius Solarweb API client.
+        Create an Fronius Solarweb API client from either key/id or login/password.
 
         :param access_key_id:  unique ID for the API key, e.g.
             "FKIAFEF58CFEFA94486F9C804CF6077A01AB". Access keys are 36
@@ -45,6 +48,8 @@ class Fronius_Solarweb:
         :param access_key_value: A secret value (GUID),
             e.g. "47c076bc-23e5-4949-37a6-4bcfcf8d21d6", which
             you need to know for authorization of API calls.
+            :param login_name: Solar.web email / login name.
+            :param login_password: Solar.web password.
         :param pv_system_id (optional): Unique PV system ID,
             this can be provided or determined from a call to
             get_pvsystems_meta_data()
@@ -52,20 +57,61 @@ class Fronius_Solarweb:
         """
         self.access_key_id = access_key_id
         self.access_key_value = access_key_value
+        self.login_name = login_name
+        self.login_password = login_password
         self.pv_system_id = pv_system_id
         self.httpx_client = httpx_client or AsyncClient()
+        self._jwt_base_header = {
+            "Content-Type": "application/json-patch+json",
+            "AccessKeyId": self.access_key_id,
+            "AccessKeyValue": self.access_key_value,
+            "Accept": "application/json",
+            "Accept-Language": "de-de",
+            "User-Agent": "Solar.web/921 CFNetwork/1410.0.3 Darwin/22.6.0",
+        }
 
     @property
     def _common_headers(self):
-        return {
-            "Accept": "application/json",
-            "AccessKeyId": self.access_key_id,
-            "AccessKeyValue": self.access_key_value,
-        }
+        if self._jwt_headers.get("Authorization"):
+            return self._jwt_headers
+        else:
+            return {
+                "Accept": "application/json",
+                "AccessKeyId": self.access_key_id,
+                "AccessKeyValue": self.access_key_value,
+            }
+
+    @property
+    def _jwt_headers(self):
+        return self._jwt_base_header
+
+    @_jwt_headers.setter
+    def _jwt_headers(self, new: dict):
+        return self._jwt_base_header.update(new)
+
+    def _jwt_del_header(self, key: str):
+        self._jwt_base_header.pop(key, None)
+
+    async def login(self):
+        self._jwt_del_header("Authorization")
+        _LOGGER.debug("Obtaining JSON web token")
+        r = await self.httpx_client.post(
+            JWT_BASE_URL,
+            headers=self._jwt_headers,
+            data={
+                "userId": self.login_name,
+                "password": self.login_password,
+            },
+        )
+        json_data = await self._check_api_response(r)
+        _LOGGER.debug(f"JWT data returned: {json_data}")
+        self._jwt_headers = {"Authorization": "Bearer " + json_data.get("jwtToken")}
 
     async def _check_api_response(self, response):
         if response.status_code == 401:
-            _LOGGER.debug("Access unauthorised check solar.web access key values")
+            _LOGGER.debug(
+                "Access unauthorised check solar.web access key values or login password"
+            )
             raise NotAuthorizedException()
         if response.status_code == 404:
             _LOGGER.debug("Item not found check your PV system ID")
@@ -93,7 +139,7 @@ class Fronius_Solarweb:
             model_data = ReleaseInfo.model_validate(json_data)
         except ValidationError as e:
             _LOGGER.error(
-                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+                f"Unable to validate data receieved from SolarWeb api: {json_data}"
             )
             _LOGGER.error(e)
         return model_data
@@ -116,7 +162,7 @@ class Fronius_Solarweb:
             model_data = PvSystemsMetaData.model_validate(json_data).pvSystems
         except ValidationError as e:
             _LOGGER.error(
-                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+                f"Unable to validate data receieved from SolarWeb api: {json_data}"
             )
             _LOGGER.error(e)
         return model_data
@@ -139,7 +185,7 @@ class Fronius_Solarweb:
             model_data = PvSystemMetaData.model_validate(json_data)
         except ValidationError as e:
             _LOGGER.error(
-                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+                f"Unable to validate data receieved from SolarWeb api: {json_data}"
             )
             _LOGGER.error(e)
         return model_data
@@ -162,7 +208,7 @@ class Fronius_Solarweb:
             model_data = DevicesMetaData.model_validate(json_data).devices
         except ValidationError as e:
             _LOGGER.error(
-                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+                f"Unable to validate data receieved from SolarWeb api: {json_data}"
             )
             _LOGGER.error(e)
         return model_data
@@ -185,7 +231,7 @@ class Fronius_Solarweb:
             model_data = PvSystemFlowData.model_validate(json_data)
         except ValidationError as e:
             _LOGGER.error(
-                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+                f"Unable to validate data receieved from SolarWeb api: {json_data}"
             )
             _LOGGER.error(e)
         return model_data
@@ -213,7 +259,7 @@ class Fronius_Solarweb:
             model_data = PvSystemAggrDataV2.model_validate(json_data)
         except ValidationError as e:
             _LOGGER.error(
-                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+                f"Unable to validate data receieved from SolarWeb api: {json_data}"
             )
             _LOGGER.error(e)
         return model_data
@@ -241,7 +287,7 @@ class Fronius_Solarweb:
             model_data = HistoricalValues.model_validate(json_data)
         except ValidationError as e:
             _LOGGER.error(
-                f"Unable to validate data receieved from SolarWeb api: '{json_data}'"
+                f"Unable to validate data receieved from SolarWeb api: {json_data}"
             )
             _LOGGER.error(e)
         return model_data
