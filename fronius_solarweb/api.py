@@ -25,7 +25,6 @@ from .schema.service import ReleaseInfo
 
 _LOGGER = logging.getLogger(__name__)
 SW_BASE_URL = "https://api.solarweb.com/swqapi"
-JWT_BASE_URL = "https://swqapi.solarweb.com/iam/jwt"
 MAX_ATTEMPTS = 5
 
 
@@ -96,9 +95,9 @@ class Fronius_Solarweb:
         self._jwt_del_header("Authorization")
         _LOGGER.debug("Obtaining JSON web token")
         r = await self.httpx_client.post(
-            JWT_BASE_URL,
+            f"{SW_BASE_URL}/iam/jwt",
             headers=self._jwt_headers,
-            data={
+            json={
                 "userId": self.login_name,
                 "password": self.login_password,
             },

@@ -5,6 +5,8 @@ from fronius_solarweb.api import Fronius_Solarweb
 
 
 class AuthDetails(BaseSettings):
+    ACCESS_KEY_ID: SecretStr
+    ACCESS_KEY_VALUE: SecretStr
     LOGIN_NAME: SecretStr
     LOGIN_PASSWORD: SecretStr
     PV_SYSTEM_ID: str
@@ -13,6 +15,8 @@ class AuthDetails(BaseSettings):
 async def main():
     creds = AuthDetails()
     fronius = Fronius_Solarweb(
+        access_key_id=creds.ACCESS_KEY_ID.get_secret_value(),
+        access_key_value=creds.ACCESS_KEY_VALUE.get_secret_value(),
         login_name=creds.LOGIN_NAME.get_secret_value(),
         login_password=creds.LOGIN_PASSWORD.get_secret_value(),
         pv_system_id=creds.PV_SYSTEM_ID,
