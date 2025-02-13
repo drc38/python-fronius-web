@@ -43,7 +43,7 @@ class DeviceMetaData(BaseModel):
     serialnumber: Optional[str] = None
     deviceTypeDetails: Optional[str] = None
     dataloggerId: Optional[str] = None
-    nodeType: Optional[str] = None
+    nodeType: Optional[int] = None
     numberMPPTrackers: Optional[int] = None
     numberPhases: Optional[int] = None
     peakPower: Optional[Power] = None
