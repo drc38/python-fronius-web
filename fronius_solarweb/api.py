@@ -94,12 +94,12 @@ class Fronius_Solarweb:
 
     async def _check_api_response(self, response):
         if response.status_code == 401:
-            _LOGGER.debug(
+            _LOGGER.warning(
                 "Access unauthorised check solar.web access key values or login password"
             )
             raise NotAuthorizedException()
         if response.status_code == 404:
-            _LOGGER.debug("Item not found check your PV system ID")
+            _LOGGER.warning("Item not found check your PV system ID")
             raise NotFoundException()
 
         response.raise_for_status()
