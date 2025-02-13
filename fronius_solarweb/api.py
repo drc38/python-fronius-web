@@ -60,12 +60,13 @@ class Fronius_Solarweb:
         self.login_password = login_password
         self.pv_system_id = pv_system_id
         self.httpx_client = httpx_client or AsyncClient()
+        self.jwt_data: dict = None
         self._jwt_base_header = {
             "Content-Type": "application/json-patch+json",
             "AccessKeyId": self.access_key_id,
             "AccessKeyValue": self.access_key_value,
             "Accept": "application/json",
-            "Accept-Language": "de-de",
+            # "Accept-Language": "de-de",
             "User-Agent": "Solar.web/921 CFNetwork/1410.0.3 Darwin/22.6.0",
         }
 
@@ -91,21 +92,6 @@ class Fronius_Solarweb:
     def _jwt_del_header(self, key: str):
         self._jwt_base_header.pop(key, None)
 
-    async def login(self):
-        self._jwt_del_header("Authorization")
-        _LOGGER.debug("Obtaining JSON web token")
-        r = await self.httpx_client.post(
-            f"{SW_BASE_URL}/iam/jwt",
-            headers=self._jwt_headers,
-            json={
-                "userId": self.login_name,
-                "password": self.login_password,
-            },
-        )
-        json_data = await self._check_api_response(r)
-        _LOGGER.debug(f"JWT data returned: {json_data}")
-        self._jwt_headers = {"Authorization": "Bearer " + json_data.get("jwtToken")}
-
     async def _check_api_response(self, response):
         if response.status_code == 401:
             _LOGGER.debug(
@@ -119,6 +105,33 @@ class Fronius_Solarweb:
         response.raise_for_status()
         # returns dict type not string
         return response.json()
+
+    async def login(self):
+        self._jwt_del_header("Authorization")
+        _LOGGER.debug("Obtaining JSON web token")
+        r = await self.httpx_client.post(
+            f"{SW_BASE_URL}/iam/jwt",
+            headers=self._jwt_headers,
+            json={
+                "userId": self.login_name,
+                "password": self.login_password,
+            },
+        )
+        self.jwt_data = await self._check_api_response(r)
+        _LOGGER.debug(f"JWT data returned: {self.jwt_data}")
+        self._jwt_headers = {"Authorization": "Bearer " + self.jwt_data.get("jwtToken")}
+
+    async def refresh_token(self, token: str = None):
+        refresh=self.jwt_data.get("refreshToken",token)
+        self._jwt_del_header("Authorization")
+        _LOGGER.debug(f"Obtaining JSON web token using refresh token: {refresh}")
+        r = await self.httpx_client.patch(
+            f"{SW_BASE_URL}/iam/jwt/{refresh}",
+            headers={"accept": "application/json"}
+        )
+        self.jwt_data = await self._check_api_response(r)
+        _LOGGER.debug(f"JWT data returned: {self.jwt_data}")
+        self._jwt_headers = {"Authorization": "Bearer " + self.jwt_data.get("jwtToken")}
 
     @retry(
         wait=wait_random_exponential(multiplier=2, max=60),
