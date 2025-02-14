@@ -33,10 +33,10 @@ class Fronius_Solarweb:
         self,
         access_key_id: str = None,
         access_key_value: str = None,
-        login_name: str = None,
-        login_password: str = None,
         pv_system_id: str = None,
         httpx_client: AsyncClient = None,
+        login_name: str = None,
+        login_password: str = None,
     ):
         """
         Create an Fronius Solarweb API client from either key/id or login/password.
@@ -47,12 +47,12 @@ class Fronius_Solarweb:
         :param access_key_value: A secret value (GUID),
             e.g. "47c076bc-23e5-4949-37a6-4bcfcf8d21d6", which
             you need to know for authorization of API calls.
-            :param login_name: Solar.web email / login name.
-            :param login_password: Solar.web password.
         :param pv_system_id (optional): Unique PV system ID,
             this can be provided or determined from a call to
             get_pvsystems_meta_data()
         :param httpx_client (optional)
+        :param login_name (optional): Solar.web app email / login name.
+        :param login_password (optional): Solar.web app password.
         """
         self.access_key_id = access_key_id
         self.access_key_value = access_key_value
