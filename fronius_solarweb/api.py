@@ -126,7 +126,7 @@ class Fronius_Solarweb:
         self._jwt_del_header("Authorization")
         _LOGGER.debug(f"Obtaining JSON web token using refresh token: {refresh}")
         r = await self.httpx_client.patch(
-            f"{SW_BASE_URL}/iam/jwt/{refresh}", headers={"accept": "application/json"}
+            f"{SW_BASE_URL}/iam/jwt/{refresh}", headers=self._common_headers
         )
         self.jwt_data = await self._check_api_response(r)
         _LOGGER.debug(f"JWT data returned: {self.jwt_data}")
