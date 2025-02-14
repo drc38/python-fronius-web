@@ -60,7 +60,7 @@ class Fronius_Solarweb:
         self.login_password = login_password
         self.pv_system_id = pv_system_id
         self.httpx_client = httpx_client or AsyncClient()
-        self.jwt_data: dict = None
+        self.jwt_data: dict = {}
         self._jwt_base_header = {
             "Content-Type": "application/json-patch+json",
             "AccessKeyId": self.access_key_id,
