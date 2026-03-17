@@ -21,7 +21,7 @@ tenacity = ">=8.1,<10.0"
 [tool.poetry.dev-dependencies]
 black = "^26.1"
 isort = "^6.0.0"
-pylint = "^3.2"
+pylint = "^4.0"
 pytest = "^8.2"
 pre-commit = "^4.0.1"
 
